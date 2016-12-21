@@ -16,3 +16,4 @@
     </tr>
   @endforeach
 </table>
+{{ $tickets->render() }}

@@ -15,5 +15,5 @@
       <td>{{ $ticket->updated_at}}</td>
     </tr>
   @endforeach
-
 </table>
+{{ $tickets->render() }}
