@@ -9,8 +9,14 @@ class Ticket extends Model
     protected $table="tickets";
     protected $fillable=[
       'message',
-      'etat',
       'user_id',
       'priorite_id'
     ];
+
+    public function priorite(){
+      return $this->belongsTo(\App\Priorite::class);
+    }
+    public function user(){
+      return $this->belongsTo(\App\User::class);
+    }
 }
