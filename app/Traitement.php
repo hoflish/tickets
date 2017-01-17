@@ -13,4 +13,9 @@ class Traitement extends Model
     'user_id',
     'ticket_id'
   ];
+
+  public function technicien()
+  {
+    return $this->belongsTo(\App\User::class,'user_id');
+  }
 }

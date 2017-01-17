@@ -30,4 +30,8 @@ class User extends Authenticatable
     {
       return $this->hasMany(\App\Tickets::class);
     }
+    public function traitemnts()
+    {
+      return $this->hasMany(\App\Traitement::class);
+    }
 }

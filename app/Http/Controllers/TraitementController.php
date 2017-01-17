@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Ticket;
+use App\Traitement;
+use Auth;
+use Session;
 class TraitementController extends Controller
 {
   public function __construct()
@@ -29,7 +32,8 @@ class TraitementController extends Controller
     {
       //$id td du ticket à traiter
       $ticket=Ticket::findOrFail($id);
-      return view('taitement.new',compact('ticket'));
+      $traitements=Traitement::where('ticket_id',$id)->get();
+      return view('taitement.new',compact('ticket','traitements'));
 
     }
 
@@ -41,7 +45,20 @@ class TraitementController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $this->validate($request,[
+          'ticket_id' =>'required',
+          'description' =>'required|min:6',
+          'duree' =>'required',
+        ]);
+        Traitement::create([
+          'description'=>$request->input('description'),
+          'duree'=>$request->input('duree'),
+          'user_id'=>Auth::user()->id,
+          'ticket_id'=>$request->input('ticket_id')
+        ]);
+        Session::flash('message','Le traitement a été enrgistrée avec succès');
+        return redirect('/home');
+
     }
 
     /**

@@ -11,6 +11,11 @@
 |
 */
 
+header('Access-Control-Allow-Origin:  *');
+header('Access-Control-Allow-Methods:  POST, GET, OPTIONS, PUT, DELETE');
+header('Access-Control-Allow-Headers:  Content-Type, X-Auth-Token, Origin, Authorization');
+
+
 Route::get('/', 'HomeController@index');
 
 Auth::routes();
@@ -27,3 +32,7 @@ Route::get('ticket/{id}/show','TicketController@show');
 /* Traitemnts */
 Route::get('ticket/{id}/traiter','TraitementController@create');
 Route::post('traitement/enregistrer','TraitementController@store');
+
+Route::get('/api/tickets',function(){
+  return \App\Ticket::All();
+});
