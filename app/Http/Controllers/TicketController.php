@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use App\Ticket;
+use App\Traitement;
 use Auth;
 use Session;
+use Excel;
 class TicketController extends Controller
 {
   public function __construct()
@@ -61,9 +63,29 @@ class TicketController extends Controller
 
     public function consulter($id)
     {
+      $traitements=Traitement::where('ticket_id',$id)->get();
+
       $ticket =Ticket::findOrFail($id);
-      $ticket->etat='en cours';
-      $ticket->save();
-      return view('ticket.show',compact('ticket'));
+      if($ticket->etat=='création')
+      {
+        $ticket->etat='en cours';
+        $ticket->save();
+      }
+
+
+      return view('ticket.show',compact('ticket','traitements'));
+    }
+
+    public function export_xls()
+    {
+            Excel::create('tickets', function($excel)
+            {
+                  $excel->sheet('tickets', function($sheet) {
+                          $sheet->loadView('export.ticket_xls');
+
+            })->export('xls');
+
+            });
+            return redirect('/');
     }
 }

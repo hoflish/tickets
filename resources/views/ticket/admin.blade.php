@@ -27,6 +27,9 @@
             <td><span class="badge">{{ $statistiques['realisee']}}</span></td>
           </tr>
         </table>
+        <div style="width:300px;">
+          <canvas id="Etats" width="200" height="200"></canvas>
+        </div>
       </td>
       <td>
         <table class="table table-bordered table-striped">
@@ -47,7 +50,7 @@
 </div>
 <div class="panel panel-success">
   <div class="panel-heading">
-    <h3 class="panel-title">Liste des tickets</h3>
+    <h3 class="panel-title">Liste des tickets   <a href="{{ url('/admin/tickets/export/xls')}}" class="btn btn-info">Exporter XLS</a></h3>
   </div>
   <div class="panel-body">
     <table class="table table-striped table-bordered table-hovered ">
@@ -71,3 +74,46 @@
     {{ $tickets->render() }}
   </div>
 </div>
+@push('scripts')
+<script>
+// le canvas
+  var ctx = document.getElementById("Etats");
+  //les données
+  var cree = ({{ $statistiques['creation']}}/{{ $statistiques['total'] }})*100;
+  var encours = ({{ $statistiques['encours']}}/{{ $statistiques['total'] }})*100;
+  var traite = ({{ $statistiques['realisee']}}/{{ $statistiques['total'] }})*100;
+  var data = {
+    labels: [
+        "Création",
+        "En cours",
+        "Traité"
+    ],
+    datasets: [
+        {
+            data: [cree, encours, traite],
+            backgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+            ],
+            hoverBackgroundColor: [
+                "#FF6384",
+                "#36A2EB",
+                "#FFCE56"
+            ]
+        }]
+};
+var options = {
+        elements: {
+            arc: {
+                borderColor: "#000000"
+            }
+        }};
+// Affichage
+  var myPieChart = new Chart(ctx,{
+    type: 'doughnut',
+    data: data,// données
+    options: options
+});
+</script>
+@endpush

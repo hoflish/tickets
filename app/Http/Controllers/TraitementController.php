@@ -7,6 +7,8 @@ use App\Ticket;
 use App\Traitement;
 use Auth;
 use Session;
+use Mail;
+use App\Mail\TicketTraite;
 class TraitementController extends Controller
 {
   public function __construct()
@@ -32,8 +34,11 @@ class TraitementController extends Controller
     {
       //$id td du ticket à traiter
       $ticket=Ticket::findOrFail($id);
-      $traitements=Traitement::where('ticket_id',$id)->get();
-      return view('taitement.new',compact('ticket','traitements'));
+      $etats=[
+        'en' =>'En cours',
+        'tr'=>'Traité'
+      ];
+      return view('taitement.new',compact('ticket','etats'));
 
     }
 
@@ -56,6 +61,19 @@ class TraitementController extends Controller
           'user_id'=>Auth::user()->id,
           'ticket_id'=>$request->input('ticket_id')
         ]);
+        // dd($request);
+        if($request->input('etat_ticket')=='tr') // tester si le ticket est traité
+        {
+
+          $ticket=Ticket::where('id',$request->input('ticket_id'))->first();
+          $ticket->etat='traité';
+          $ticket->save();
+
+          // envoyer un mail pour le demandeur
+          Mail::to($ticket->user->email)->send(new TicketTraite($ticket));
+
+
+        }
         Session::flash('message','Le traitement a été enrgistrée avec succès');
         return redirect('/home');
 

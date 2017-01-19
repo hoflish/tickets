@@ -29,7 +29,7 @@ class HomeController extends Controller
       $statistiques['total']=Ticket::All()->count();
       $statistiques['encours']=Ticket::where('etat','en cours')->get()->count();
       $statistiques['creation']=Ticket::where('etat','création')->get()->count();
-      $statistiques['realisee']=Ticket::where('etat','réalisée')->get()->count();
+      $statistiques['realisee']=Ticket::where('etat','traité')->get()->count();
 
       $priorites=Priorite::All();
 

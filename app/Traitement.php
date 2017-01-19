@@ -18,4 +18,8 @@ class Traitement extends Model
   {
     return $this->belongsTo(\App\User::class,'user_id');
   }
+  public function ticket()
+  {
+    return $this->belongsTo(\App\Ticket::class);
+  }
 }
